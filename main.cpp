@@ -7,28 +7,28 @@
 using namespace std;	
 
 
+//엔진회사
 char Input();
 bool Process(char Key);
 void Draw();
 void Initialize();
 void Terminate();
 
+//엔진회사
 void CustomInitialze();
 void CustomTerminate();
-void CustomProcess();
+bool CustomProcess(char Key);
 void CustomDraw();
 
-void ProcessBingo();
+//개발자
+bool ProcessBingo(char Key);
 
 
 void InitializeBingoPlayerMap();
 
-int Gold = 0;
-
 int BingoPlayerMap[9];
 
-
-
+//엔진회사
 int main()
 {
 	bool bGameState = true;
@@ -63,9 +63,7 @@ bool Process(char Key)
 		return false;
 	}
 
-	CustomProcess();
-
-	return true;
+	return CustomProcess(Key);
 }
 
 void Draw()
@@ -90,7 +88,7 @@ void Terminate()
 
 
 
-
+//개발자
 void CustomInitialze()
 {
 	InitializeBingoPlayerMap();
@@ -98,19 +96,87 @@ void CustomInitialze()
 
 void CustomTerminate()
 {
+	for (int i = 0; i < 9; ++i)
+	{
+		if (i % 3 == 0 && i != 0)
+		{
+			cout << "\n";
+		}
+
+		if ( BingoPlayerMap[i]  > 9 ) 
+		{
+			cout << (char)BingoPlayerMap[i] << " ";
+		}
+		else
+		{
+			cout << BingoPlayerMap[i] << " ";
+		}
+	}
 }
 
-void CustomProcess()
+bool CustomProcess(char Key)
 {
-	ProcessBingo();
+	return ProcessBingo(Key);
 }
 
 void CustomDraw()
 {
 }
 
-void ProcessBingo()
+bool ProcessBingo(char Key)
 {
+	//빙고판에서 찾은 칸에 마킹한다.
+	for (int i = 0; i < 9; ++i)
+	{
+		if (BingoPlayerMap[i] == Key - 48)
+		{
+			BingoPlayerMap[i] = 'X';
+			break;
+		}
+	}
+
+	//가로 빙고인지 확인한다.
+	for (int i = 0; i <= 6; i = i + 3)
+	{
+		if (BingoPlayerMap[i + 0] == 'X' &&
+			BingoPlayerMap[i + 1] == 'X' &&
+			BingoPlayerMap[i + 2] == 'X')
+		{
+			cout << "Bingo" << endl;
+			return false;
+		}
+	}
+
+	//세로 빙고인지 확인한다.
+	for (int i = 0; i <= 2; i++)
+	{
+		if (BingoPlayerMap[i] == 'X' &&
+			BingoPlayerMap[i + 3] == 'X' &&
+			BingoPlayerMap[i + 6] == 'X')
+		{
+			cout << "Bingo" << endl;
+			return false;
+		}
+	}
+
+	//대각선 빙고인지 확인한다.
+	if (BingoPlayerMap[0] == 'X' &&
+		BingoPlayerMap[4] == 'X' &&
+		BingoPlayerMap[8] == 'X')
+	{
+		cout << "Bingo" << endl;
+		return false;
+	}
+	else if (BingoPlayerMap[2] == 'X' &&
+		BingoPlayerMap[4] == 'X' &&
+		BingoPlayerMap[6] == 'X')
+	{
+		cout << "Bingo" << endl;
+		return false;
+	}
+
+	return true;
+
 }
 
 void InitializeBingoPlayerMap()
